@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TECHNOMANCER • WARLORD PROTOCOL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00ff88;
+            --secondary: #ff006e;
+            --accent: #00d4ff;
+            --warning: #ffaa00;
+            --bg-dark: #0a0e17;
+            --bg-darker: #050810;
+            --bg-panel: #0f1419;
+            --text-primary: #e8f0f2;
+            --text-muted: #7a8b99;
+            --border: #1a2332;
+            --glow: rgba(0, 255, 136, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--bg-darker);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 255, 136, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(0, 212, 255, 0.03) 0%, transparent 50%),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 136, 0.02) 2px, rgba(0, 255, 136, 0.02) 4px);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Scanline effect */
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100vh); }
+        }
+
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to bottom, transparent, var(--primary), transparent);
+            opacity: 0.1;
+            animation: scanline 8s linear infinite;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* Header */
+        .header {
+            border: 2px solid var(--border);
+            border-left: 4px solid var(--primary);
+            background: linear-gradient(135deg, var(--bg-panel) 0%, var(--bg-darker) 100%);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            animation: slideIn 0.8s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.05), transparent);
+            transform: skewX(-20deg);
+        }
+
+        .header-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 30px var(--glow);
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
+        }
+
+        .header-subtitle {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1rem;
+            color: var(--text-muted);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+        }
+
+        .status-bar {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+            animation: blink 2s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-top: 3px solid var(--primary);
+            padding: 1.5rem;
+            position: relative;
+            animation: fadeInUp 0.8s ease-out backwards;
+        }
+
+        .panel:nth-child(1) { animation-delay: 0.1s; }
+        .panel:nth-child(2) { animation-delay: 0.2s; }
+        .panel:nth-child(3) { animation-delay: 0.3s; }
+        .panel:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.02) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .panel-header {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .panel-header::before {
+            content: '▸';
+            color: var(--accent);
+            font-size: 1.5rem;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .stat-item {
+            background: rgba(0, 255, 136, 0.03);
+            border-left: 2px solid var(--accent);
+            padding: 0.8rem;
+        }
+
+        .stat-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .info-list {
+            list-style: none;
+        }
+
+        .info-list li {
+            padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(26, 35, 50, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .info-list li:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            color: var(--text-muted);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .value {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .value.highlight {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .editable {
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .editable:hover {
+            color: var(--accent);
+            text-shadow: 0 0 8px var(--accent);
+        }
+
+        .editable::after {
+            content: '✎';
+            position: absolute;
+            right: -20px;
+            font-size: 0.8em;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            color: var(--accent);
+        }
+
+        .editable:hover::after {
+            opacity: 0.7;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            font-family: 'Orbitron', sans-serif;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--primary);
+            color: var(--text-primary);
+            padding: 0.8rem 1.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: rgba(0, 255, 136, 0.1);
+            border-left-color: var(--accent);
+            transform: translateX(3px);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+        }
+
+        .control-btn.danger {
+            border-left-color: var(--secondary);
+        }
+
+        .control-btn.danger:hover {
+            background: rgba(255, 0, 110, 0.1);
+            border-left-color: var(--secondary);
+            box-shadow: 0 0 15px rgba(255, 0, 110, 0.3);
+        }
+
+        /* Summons Section */
+        .summons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .summon-card {
+            background: linear-gradient(135deg, var(--bg-panel) 0%, var(--bg-darker) 100%);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            padding: 1.2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .summon-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .summon-card:hover::before {
+            left: 100%;
+        }
+
+        .summon-card:hover {
+            border-left-color: var(--primary);
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.2);
+        }
+
+        .summon-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .summon-type {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 0.8rem;
+        }
+
+        .summon-desc {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .summon-stats {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.8rem;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.75rem;
+        }
+
+        .summon-stat {
+            color: var(--primary);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .tab {
+            font-family: 'Orbitron', sans-serif;
+            padding: 0.8rem 1.5rem;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .tab:hover {
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            color: var(--primary);
+        }
+
+        .tab.active::after {
+            width: 100%;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Equipment */
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .equipment-item {
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid var(--border);
+            padding: 1rem;
+            border-left: 2px solid var(--secondary);
+        }
+
+        .equipment-item h4 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent);
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .equipment-item ul {
+            list-style: none;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .equipment-item ul li {
+            padding: 0.3rem 0;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .equipment-item ul li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 2rem;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .summons-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scanline"></div>
+    
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-title">TECHNOMANCER</div>
+            <div class="header-subtitle">WARLORD PROTOCOL • RONIN DIVISION</div>
+            <div class="status-bar">
+                <div class="status-item">
+                    <div class="status-dot"></div>
+                    <span>SYSTEM ONLINE</span>
+                </div>
+                <div class="status-item">
+                    <div class="status-dot"></div>
+                    <span>LEGION READY</span>
+                </div>
+                <div class="status-item">
+                    <div class="status-dot"></div>
+                    <span>KATANA MASTER</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Control Panel -->
+        <div class="controls">
+            <button class="control-btn" onclick="exportData()">⬇ Export Data</button>
+            <button class="control-btn" onclick="importData()">⬆ Import Data</button>
+            <button class="control-btn danger" onclick="resetToDefaults()">↺ Reset to Defaults</button>
+        </div>
+
+        <!-- Character Stats Grid -->
+        <div class="grid">
+            <div class="panel">
+                <div class="panel-header">Physical Profile</div>
+                <ul class="info-list">
+                    <li><span class="label">Height</span><span class="value editable" id="height-value" onclick="editField('Height', characterData.character.height, 'character', 'height')">163 cm</span></li>
+                    <li><span class="label">Weight</span><span class="value editable" id="weight-value" onclick="editField('Weight', characterData.character.weight, 'character', 'weight')">67 kg</span></li>
+                    <li><span class="label">Appearance</span><span class="value highlight editable" id="appearance-value" onclick="editField('Appearance', characterData.character.appearance, 'character', 'appearance')">User Custom</span></li>
+                </ul>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">Bio-Enhancement</div>
+                <ul class="info-list">
+                    <li><span class="label">Constitution</span><span class="value highlight editable" id="constitution-value" onclick="editField('Constitution', characterData.character.constitution, 'character', 'constitution')">Spiderman-Class</span></li>
+                    <li><span class="label">Skeleton</span><span class="value highlight editable" id="skeleton-value" onclick="editField('Skeleton', characterData.character.skeleton, 'character', 'skeleton')">Dragonium</span></li>
+                    <li><span class="label">Muscle Fiber</span><span class="value highlight editable" id="muscle-value" onclick="editField('Muscle Fiber', characterData.character.muscle, 'character', 'muscle')">Iron-Reinforced</span></li>
+                    <li><span class="label">Blood Type</span><span class="value editable" id="blood-value" style="color: var(--secondary); cursor: pointer;" onclick="editField('Blood Type', characterData.character.blood, 'character', 'blood')">Calamity Poisonous</span></li>
+                </ul>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">Primary Class</div>
+                <div class="stat-grid">
+                    <div class="stat-item">
+                        <div class="stat-label">Class</div>
+                        <div class="stat-value editable" id="primary-class-value" style="color: var(--primary); cursor: pointer;" onclick="editField('Primary Class Name', characterData.classes.primary.name, 'class-primary', 'name')">Technomancer</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Rank</div>
+                        <div class="stat-value editable" id="primary-rank-value" onclick="editField('Primary Class Rank', characterData.classes.primary.rank, 'class-primary', 'rank')">1st</div>
+                    </div>
+                </div>
+                <ul class="info-list" style="margin-top: 1rem;">
+                    <li><span class="label">Talent</span><span class="value highlight editable" id="primary-talent-value" onclick="editField('Primary Talent', characterData.classes.primary.talent, 'class-primary', 'talent')">WARLORD</span></li>
+                    <li style="padding-top: 0.3rem; border-bottom: none;">
+                        <span class="value editable" id="primary-desc-value" style="font-size: 0.85rem; color: var(--text-muted); cursor: pointer;" onclick="editField('Primary Talent Description', characterData.classes.primary.description, 'class-primary', 'description')">
+                            Create and summon legion armies with full equipment, vehicles, and tactical support
+                        </span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">Secondary Class</div>
+                <div class="stat-grid">
+                    <div class="stat-item">
+                        <div class="stat-label">Class</div>
+                        <div class="stat-value editable" id="secondary-class-value" style="color: var(--accent); cursor: pointer;" onclick="editField('Secondary Class Name', characterData.classes.secondary.name, 'class-secondary', 'name')">Ronin</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Rank</div>
+                        <div class="stat-value editable" id="secondary-rank-value" onclick="editField('Secondary Class Rank', characterData.classes.secondary.rank, 'class-secondary', 'rank')">2nd</div>
+                    </div>
+                </div>
+                <ul class="info-list" style="margin-top: 1rem;">
+                    <li><span class="label">Talent</span><span class="value highlight editable" id="secondary-talent-value" onclick="editField('Secondary Talent', characterData.classes.secondary.talent, 'class-secondary', 'talent')">Katana Mastery</span></li>
+                    <li style="padding-top: 0.3rem; border-bottom: none;">
+                        <span class="value editable" id="secondary-desc-value" style="font-size: 0.85rem; color: var(--text-muted); cursor: pointer;" onclick="editField('Secondary Talent Description', characterData.classes.secondary.description, 'class-secondary', 'description')">
+                            Supreme blade techniques and honor-bound combat expertise
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Tabs Section -->
+        <div class="panel">
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('equipment')">Equipment & Vehicles</button>
+                <button class="tab" onclick="switchTab('units')">Spec Ops Units</button>
+                <button class="tab" onclick="switchTab('special')">Special Summons</button>
+                <button class="tab" onclick="switchTab('drones')">Drones & UAV</button>
+            </div>
+
+            <!-- Tab 1: Equipment & Vehicles -->
+            <div id="equipment" class="tab-content active">
+                <div class="panel-header" style="margin-bottom: 1.5rem; border-bottom: none;">Weapons, Vehicles & Strategic Assets</div>
+                <p style="color: var(--text-muted); margin-bottom: 2rem; font-size: 0.9rem;">
+                    These items require operator control and cannot act independently. Summoned assets include weapons systems, vehicles, and strategic munitions.
+                </p>
+                
+                <div class="summons-grid">
+                    <div class="summon-card">
+                        <div class="summon-name">SADM</div>
+                        <div class="summon-type">Strategic Weapon • Nuclear</div>
+                        <div class="summon-desc">
+                            Special Atomic Demolition Munition - tactical nuclear device for strategic demolition. Requires operator authorization and deployment. Last resort weapon for fortified positions or creating impassable terrain.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">☢ Nuclear</span>
+                            <span class="summon-stat">⚠ Manual Deploy</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Howitzer</div>
+                        <div class="summon-type">Artillery • Heavy Fire Support</div>
+                        <div class="summon-desc">
+                            Heavy artillery cannon for indirect fire at extreme ranges. Requires crew operation. Devastating explosive shells for area bombardment and fortification destruction.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">💥 Artillery</span>
+                            <span class="summon-stat">👥 Crew Operated</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Anti-Aircraft Gun</div>
+                        <div class="summon-type">Artillery • Air Defense</div>
+                        <div class="summon-desc">
+                            Rapid-fire anti-aircraft system designed to eliminate aerial threats. Requires operator for targeting and firing. High rate of fire with advanced tracking capabilities.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🎯 Anti-Air</span>
+                            <span class="summon-stat">👥 Operated</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">MLRS</div>
+                        <div class="summon-type">Artillery • Rocket System</div>
+                        <div class="summon-desc">
+                            Multiple Launch Rocket System for overwhelming area saturation. Operator-controlled rocket salvos to blanket large areas and destroy formations.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🚀 Multi-Rocket</span>
+                            <span class="summon-stat">👥 Crew Required</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Himalayan 411 Bike</div>
+                        <div class="summon-type">Vehicle • All-Terrain</div>
+                        <div class="summon-desc">
+                            Rugged adventure motorcycle designed for extreme terrain. Requires rider. Perfect for solo reconnaissance, rapid mobility in hostile environments, and low-signature operations.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🏍 Motorcycle</span>
+                            <span class="summon-stat">👤 Single Rider</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">JIMNY Urban Vehicle</div>
+                        <div class="summon-type">Vehicle • City Operations</div>
+                        <div class="summon-desc">
+                            Compact diesel 4×4 for urban environments. Driver required. Enhanced armor, low profile, excellent maneuverability in tight streets. Ideal for covert city operations.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🚙 Compact SUV</span>
+                            <span class="summon-stat">👥 Driver + Crew</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">G-63 Escort</div>
+                        <div class="summon-type">Vehicle • Armored Transport</div>
+                        <div class="summon-desc">
+                            Heavily armored luxury SUV for high-value target protection. Operator required. Bulletproof, explosive-resistant, powerful engine for emergency extraction and convoy operations.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🛡 Heavy Armor</span>
+                            <span class="summon-stat">👥 Driver + Security</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Defender 110</div>
+                        <div class="summon-type">Vehicle • Expedition</div>
+                        <div class="summon-desc">
+                            Legendary off-road vehicle with extreme durability. Driver required. Enhanced for military operations with improved suspension, winch systems, and equipment racks.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🚙 Off-road</span>
+                            <span class="summon-stat">👥 Operated</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Helicopter Transport</div>
+                        <div class="summon-type">Vehicle • Air Transport</div>
+                        <div class="summon-desc">
+                            Executive-class military helicopter for rapid personnel transport. Pilot required. Features advanced avionics, defensive countermeasures, and luxury interior for command staff movement.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🚁 Rotary Wing</span>
+                            <span class="summon-stat">👥 Pilot + Crew</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">GunBoat</div>
+                        <div class="summon-type">Vehicle • Naval Patrol</div>
+                        <div class="summon-desc">
+                            Fast attack boat armed with mounted weapons. Crew operated. Designed for riverine operations, coastal patrol, and amphibious assault support.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">⚓ Naval</span>
+                            <span class="summon-stat">👥 Crew Required</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Super Dvora Mk.II</div>
+                        <div class="summon-type">Vehicle • Fast Attack Craft</div>
+                        <div class="summon-desc">
+                            High-speed patrol boat with heavy armament. Requires naval crew. Excels in coastal defense, anti-ship operations, and rapid maritime insertion/extraction missions.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">⚓ Fast Attack</span>
+                            <span class="summon-stat">👥 Naval Crew</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Spec Ops Units -->
+            <!-- Tab 2: Spec Ops Units -->
+            <div id="units" class="tab-content">
+                <div class="panel-header" style="margin-bottom: 1.5rem; border-bottom: none;">Bio-Tech Operators</div>
+                <p style="color: var(--text-muted); margin-bottom: 2rem; font-size: 0.9rem;">
+                    Advanced bio-tech soldiers (172cm / 75kg) with reinforced steel skeletons, enhanced muscle fiber, and black thick skin. 
+                    Features: Croco Eye cams (120 FPS, 360° FOV, x25 zoom), Tri-SCAN detection (radar 3km, LiDAR 800m, sonar 1.2km), 
+                    adaptive amphibious capability, 60 km/h sprint speed, 4-10x strength, 168hr durability. All units equipped with tactical/thermal camo.
+                </p>
+                
+                <div class="summons-grid">
+                    <div class="summon-card">
+                        <div class="summon-name">Vanguard</div>
+                        <div class="summon-type">Assault Squad • Frontline Assault</div>
+                        <div class="summon-desc">
+                            Elite frontline operator with bio-tech enhancements. Armed with AK-205 Alpha (suppressed), P320 M17, M320 GL (HEI), flashbang, exploding smoke, and knife. Advanced CQC and firearms mastery. Tri-SCAN detection suite.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">⚔ Assault</span>
+                            <span class="summon-stat">👁 360° Vision</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Breacher</div>
+                        <div class="summon-type">Assault Squad • Entry Specialist</div>
+                        <div class="summon-desc">
+                            Bio-enhanced close-quarters specialist. VEPR-12 shotgun, P320 M17, magnetic bombs, C4, flash exploding smoke, knife. Expert in forced entry, demolition, and room clearing with breach & clear synchronization.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">💥 Explosive</span>
+                            <span class="summon-stat">🚪 Breach Expert</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Ambusher</div>
+                        <div class="summon-type">Assault Squad • Stealth Operations</div>
+                        <div class="summon-desc">
+                            Silent operator with thermal camo and echolocation. AS VAL-M subsonic rifle, P320 M17, 30mm Tishina GL (thermobaric), smoke canister, flashbang, knife. Masters of stealth engagement and enhanced olfactory tracking.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🔇 Stealth</span>
+                            <span class="summon-stat">🎯 Thermal Camo</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Tanker</div>
+                        <div class="summon-type">Assault Squad • Heavy Defense</div>
+                        <div class="summon-desc">
+                            Bio-enhanced mobile fortress with 4-10x strength. Ballistic shield, G18 extended mag, warhammer. WALL magnetic shield (3m radius). Provides mobile cover and frontline protection with 5m vertical jump capability.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🛡 Shield Master</span>
+                            <span class="summon-stat">💪 10x Strength</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Support</div>
+                        <div class="summon-type">Assault Squad • Fire Support</div>
+                        <div class="summon-desc">
+                            Heavy weapons bio-tech operator. PKP-BP machine gun, P320 M17, drone seeker explosive, GM-94 smoke launcher, instant incendiary grenade, knife. Sustained suppressive fire with tactical awareness and prevision abilities.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🔫 Heavy MG</span>
+                            <span class="summon-stat">🚁 Drone Deploy</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Warfighter</div>
+                        <div class="summon-type">Specialist • Advanced Combat</div>
+                        <div class="summon-desc">
+                            Next-gen bio-tech operator with dynamic tactical camo and half coat. SCAR-H .277 Fury (NGSW, XM157 smart scope), P320 M17, RG-6 grenade launcher, laser trap mine, frag grenade. Recon drone area scanner. Advanced parkour at 60 km/h sprint.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🎯 Smart Optics</span>
+                            <span class="summon-stat">👁 Recon Drone</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Hunter</div>
+                        <div class="summon-type">Specialist • Tracker & Trapper</div>
+                        <div class="summon-desc">
+                            Bio-enhanced tracker with conceal tactical camo and enhanced olfactory receptors. Multipurpose hunting rifle (12-gauge, bolts, ropecaster), knife, traps, mines. Expert tracking with echolocation and sonar detection. Amphibious capability.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🏹 Multi-weapon</span>
+                            <span class="summon-stat">🪤 Track Master</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Sniper</div>
+                        <div class="summon-type">Specialist • Long Range Elimination</div>
+                        <div class="summon-desc">
+                            Elite bio-tech marksman with advanced tactical camo, coat, chameleon mode, and isolation. TRG-42M .338, M107 .50cal (HAPI, explosive, self-guided rounds), P320 M17. Self-spotter with ballistic computer. Croco Eye x25 zoom with multi-spectrum vision.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🎯 Extreme Range</span>
+                            <span class="summon-stat">🔬 Smart Ammo</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Ambassador</div>
+                        <div class="summon-type">Specialist • Command & Intelligence</div>
+                        <div class="summon-desc">
+                            Elite bio-tech field commander with teleportation to marked locations. P-1911, fiber wire, knife, dizzy/mortal poison. Master negotiator with speech corruption abilities. Intel seeker, hacking devices. Authority to summon all team members via INTERCOM.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">⚡ Teleport</span>
+                            <span class="summon-stat">👔 Diplomacy</span>
+                            <span class="summon-stat">📡 Command</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Custom Operator</div>
+                        <div class="summon-type">Spec Ops • Adaptive Loadout</div>
+                        <div class="summon-desc">
+                            Fully bio-enhanced special operations soldier with customizable loadout. All standard bio-tech features: reinforced steel skeleton, enhanced muscle fiber, Croco Eye vision system, Tri-SCAN detection, tactical strategy AI, advanced CQC, and extreme accuracy.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">⭐ Elite Bio-Tech</span>
+                            <span class="summon-stat">🎖 Versatile</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: Special Summons -->
+                <div class="summons-grid">
+                    <div class="summon-card">
+                        <div class="summon-name">Vanguard</div>
+                        <div class="summon-type">Assault Squad • Frontline</div>
+                        <div class="summon-desc">
+                            Elite frontline assault operator equipped with AK-205 Alpha (suppressed), M17 sidearm, and M320 grenade launcher. Specializes in aggressive engagement and rapid area suppression.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">⚔ Assault</span>
+                            <span class="summon-stat">🛡 Medium Armor</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Breacher</div>
+                        <div class="summon-type">Assault Squad • Entry Specialist</div>
+                        <div class="summon-desc">
+                            Close-quarters combat specialist armed with VEPR-12 shotgun, magnetic bombs, and C4. Expert in forced entry, room clearing, and demolition operations.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">💥 Explosive</span>
+                            <span class="summon-stat">🚪 Breaching</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Ambusher</div>
+                        <div class="summon-type">Assault Squad • Stealth Ops</div>
+                        <div class="summon-desc">
+                            Silent operator with AS VAL-M subsonic rifle and 30mm Tishina thermobaric launcher. Masters of stealth engagement and tactical positioning.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🔇 Stealth</span>
+                            <span class="summon-stat">🎯 Precision</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Tanker</div>
+                        <div class="summon-type">Assault Squad • Heavy Defense</div>
+                        <div class="summon-desc">
+                            Mobile fortress wielding ballistic shield, G18 extended mag, and warhammer. Provides mobile cover and frontline protection for squad advancement.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🛡 Heavy Defense</span>
+                            <span class="summon-stat">💪 Melee</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Support</div>
+                        <div class="summon-type">Assault Squad • Fire Support</div>
+                        <div class="summon-desc">
+                            Heavy weapons specialist with PKP-BP machine gun, explosive drones, and GM-94 smoke launcher. Provides sustained suppressive fire and tactical drone deployment.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🔫 Heavy MG</span>
+                            <span class="summon-stat">🚁 Drone Ops</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Warfighter</div>
+                        <div class="summon-type">Specialist • Advanced Combat</div>
+                        <div class="summon-desc">
+                            Next-gen operator with SCAR-H .277 Fury, XM157 smart scope, and recon drone. Features dynamic tactical camo and advanced targeting systems for precision combat.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🎯 Smart Optics</span>
+                            <span class="summon-stat">👁 Recon</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Hunter</div>
+                        <div class="summon-type">Specialist • Tracker</div>
+                        <div class="summon-desc">
+                            Versatile tracker with multipurpose hunting rifle (12-gauge, bolts, ropecaster). Excels in wilderness operations, trap deployment, and target capture missions.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🏹 Multi-weapon</span>
+                            <span class="summon-stat">🪤 Trapping</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Sniper</div>
+                        <div class="summon-type">Specialist • Long Range</div>
+                        <div class="summon-desc">
+                            Elite marksman with TRG-42M .338 and M107 .50cal featuring self-guided bullets and HAPI rounds. Advanced chameleon camo and ballistic computer for extreme-range precision.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🎯 Extreme Range</span>
+                            <span class="summon-stat">🔬 Smart Ammo</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Ambassador</div>
+                        <div class="summon-type">Specialist • Command & Control</div>
+                        <div class="summon-desc">
+                            Elite field commander with teleportation ability, master negotiator, intel specialist. Authority to summon all team members. Armed with P-1911, fiber wire, and lethal/non-lethal poisons.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">⚡ Teleport</span>
+                            <span class="summon-stat">👔 Diplomacy</span>
+                            <span class="summon-stat">📡 Command</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Spec Ops Operator</div>
+                        <div class="summon-type">Elite Unit • Multi-Role</div>
+                        <div class="summon-desc">
+                            Highly trained special operations soldier with adaptive loadout. Capable of executing complex missions across all combat scenarios with superior tactical awareness.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">⭐ Elite</span>
+                            <span class="summon-stat">🎖 Versatile</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: Special Summons -->
+            <div id="special" class="tab-content">
+                <div class="panel-header" style="margin-bottom: 1.5rem; border-bottom: none;">Bio-Mimetic Companions</div>
+                <p style="color: var(--text-muted); margin-bottom: 2rem; font-size: 0.9rem;">
+                    Advanced robotic units disguised as natural creatures or purpose-built for stealth operations. External appearance mimics organic life, but internal systems are fully robotic with AI processing and autonomous operation.
+                </p>
+                
+                <div class="summons-grid">
+                    <div class="summon-card">
+                        <div class="summon-name">Owl</div>
+                        <div class="summon-type">Bio-Mimetic Companion • Night Reconnaissance</div>
+                        <div class="summon-desc">
+                            Robotic owl disguised as natural bird. Silent flight systems with thermal/night vision optics. Autonomous AI surveillance with real-time data transmission. Natural appearance allows covert operations in civilian areas without suspicion.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🦉 Bio-Mimetic</span>
+                            <span class="summon-stat">🌙 Night Vision</span>
+                            <span class="summon-stat">🤖 AI Autonomous</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Royal Eagle</div>
+                        <div class="summon-type">Bio-Mimetic Companion • Aerial Superiority</div>
+                        <div class="summon-desc">
+                            Robotic bird of prey with lifelike exterior. Advanced optics with 8x zoom, multi-spectrum vision (thermal, infrared, RGB). AI-controlled flight patterns mimic natural behavior. Wide-area surveillance and high-altitude reconnaissance without arousing suspicion.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🦅 Bio-Mimetic</span>
+                            <span class="summon-stat">☀ Day Ops</span>
+                            <span class="summon-stat">🤖 AI Autonomous</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Thief Spider-Monkey</div>
+                        <div class="summon-type">Bio-Mimetic Companion • Infiltration</div>
+                        <div class="summon-desc">
+                            Robotic primate with natural fur exterior and synthetic muscle actuators. Highly intelligent AI for problem-solving and lock manipulation. Dexterous hands for item retrieval and tool use. Perfect infiltrator - appears as escaped exotic pet while conducting covert operations.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🐒 Bio-Mimetic</span>
+                            <span class="summon-stat">🔓 Infiltrator</span>
+                            <span class="summon-stat">🤖 AI Autonomous</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Stalker</div>
+                        <div class="summon-type">Combat Robot • Stealth Assassin</div>
+                        <div class="summon-desc">
+                            Fully robotic quadruped hunter with no organic disguise. Advanced invisible camo system (optical + thermal). Silent servo motors and padded feet for zero-noise movement. Enhanced sensor suite: thermal, motion detection, echolocation. Autonomous hunter-killer with adaptive AI.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🤖 Pure Robot</span>
+                            <span class="summon-stat">👻 Invisible Camo</span>
+                            <span class="summon-stat">🔇 Silent Hunter</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 4: Drones & UAV -->
+            <!-- Tab 4: Drones & UAV -->
+            <div id="drones" class="tab-content">
+                <div class="panel-header" style="margin-bottom: 1.5rem; border-bottom: none;">Autonomous Aerial Systems</div>
+                <p style="color: var(--text-muted); margin-bottom: 2rem; font-size: 0.9rem;">
+                    Fully autonomous drone systems ranging from nano-scale reconnaissance to heavy attack aircraft. All units feature AI control, independent operation, and network coordination capabilities.
+                </p>
+                
+                <div class="summons-grid">
+                    <div class="summon-card">
+                        <div class="summon-name">Dragonfly</div>
+                        <div class="summon-type">Nano-Drone • Micro Surveillance</div>
+                        <div class="summon-desc">
+                            Miniature surveillance drone (insect-sized) capable of infiltrating tight spaces. Silent operation with micro-cameras and audio pickups. Perfect for covert intelligence gathering in restricted areas. Can be deployed in swarms.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🔬 Nano-Scale</span>
+                            <span class="summon-stat">🕵 Ultra Covert</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Recon Drone</div>
+                        <div class="summon-type">Small Drone • Area Scanner</div>
+                        <div class="summon-desc">
+                            Portable quadcopter for tactical reconnaissance. Multi-spectral cameras (thermal, infrared, RGB), real-time mapping, and target marking. Autonomous flight with waypoint navigation. 30-minute endurance, 2km range.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">👁 Surveillance</span>
+                            <span class="summon-stat">📡 Real-time Intel</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Swarm Drone Attack</div>
+                        <div class="summon-type">Drone Swarm • Mass Engagement</div>
+                        <div class="summon-desc">
+                            Coordinated swarm of 20-50 small attack drones with explosive payloads. AI-controlled formation flight and distributed targeting. Overwhelms enemy defenses through simultaneous multi-vector attacks. Network-coordinated strike patterns.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🐝 Swarm AI</span>
+                            <span class="summon-stat">💥 Multi-Strike</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Drone Healer</div>
+                        <div class="summon-type">Medical Drone • Field Support</div>
+                        <div class="summon-desc">
+                            Automated medical support drone with emergency supply delivery. Carries medical kits, trauma supplies, and auto-injectors. AI-guided navigation to wounded units. Can provide basic diagnostic scans via onboard sensors.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">❤ Medical</span>
+                            <span class="summon-stat">🚑 Auto-Deploy</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">RC Car Bomb</div>
+                        <div class="summon-type">Ground Drone • Precision Demolition</div>
+                        <div class="summon-desc">
+                            Remote or AI-controlled 1:12 scale vehicle loaded with C4 explosive. Can navigate urban terrain, stairs, and tight spaces. Perfect for vehicle elimination, structure breaching, and precision demolition. Autonomous pathfinding.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">💣 Explosive</span>
+                            <span class="summon-stat">🎮 AI/Remote</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">FASG - Auto Sentry Gun</div>
+                        <div class="summon-type">Fixed Defense • Automated Turret</div>
+                        <div class="summon-desc">
+                            Fixed automated sentry with 5.56mm AR and 40mm GL (HEI/smoke). AI-controlled 360° coverage with thermal/night vision. Motion tracking and friend-or-foe identification. Perfect for perimeter defense.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🤖 Auto-Target</span>
+                            <span class="summon-stat">🔫 Dual Weapon</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">MVS - Modular Vanguard</div>
+                        <div class="summon-type">Auto-Turret • Standard Defense</div>
+                        <div class="summon-desc">
+                            Automated sentry system with 5.56mm AR and 40mm grenade launcher (HEI/smoke). AI-controlled 360° coverage with thermal/night vision. Autonomous threat assessment and engagement.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🤖 Automated</span>
+                            <span class="summon-stat">🔫 Dual System</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">HVS - Heavy Vanguard</div>
+                        <div class="summon-type">Heavy Turret • Area Denial</div>
+                        <div class="summon-desc">
+                            Heavy automated weapons platform with 7.62mm AR, rocket launcher, missile launcher, and smoke GL. AI-controlled heavy suppression and vehicle elimination. Autonomous operation with hardened position.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">💪 Heavy AI</span>
+                            <span class="summon-stat">🚀 Anti-Vehicle</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">3AD - Assault Drone</div>
+                        <div class="summon-type">Combat Drone • Air Support</div>
+                        <div class="summon-desc">
+                            Advanced aerial combat drone with 5.8mm SMG. Autonomous flight and targeting AI. Provides mobile air support, reconnaissance, and precision strikes. Multi-unit coordination capability for complex operations.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">✈ Aerial Combat</span>
+                            <span class="summon-stat">🤖 AI Autonomous</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">LYNX UGV</div>
+                        <div class="summon-type">Ground Combat • Mini-Tank</div>
+                        <div class="summon-desc">
+                            Unmanned ground vehicle: 4.9m × 2.05m × 1.85m, 2.3T. Autonomous 400kW electric AWD, 150km/h. Armed with 30mm cannon (500rds), 12.7mm HMG (5,000rds), 5.56mm minigun (10,000rds). Nano-ceramic armor, 360° radar (5km), LiDAR, thermal imaging, SLAM navigation AI.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🚗 AI Tank</span>
+                            <span class="summon-stat">🛡 Heavy Armor</span>
+                            <span class="summon-stat">🤖 Full Auto</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">V0rMehr Combat Drone</div>
+                        <div class="summon-type">Attack Helicopter • AI Controlled</div>
+                        <div class="summon-desc">
+                            Autonomous stealth combat helicopter: 6.2m long, 8.5m rotor, 1,800kg. AI-controlled electric propulsion, 180km/h sprint. Armament: 7.62mm minigun (10k rds), 12.7mm GAU-19 (5k rds), 16× 70mm rockets, 4× missiles (A2S/A2A). Falcon Eye optics, AESA radar (8km), 3D LiDAR. Fully autonomous operation.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🚁 AI Helo</span>
+                            <span class="summon-stat">🎯 Multi-weapon</span>
+                            <span class="summon-stat">🤖 Autonomous</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">UAV Attack Aircraft</div>
+                        <div class="summon-type">Large UAV • Strategic Strike</div>
+                        <div class="summon-desc">
+                            Long-range unmanned fixed-wing attack aircraft with AI autopilot. High-altitude precision strike capability with guided munitions. Extended endurance for strategic bombing runs and air superiority missions. Multi-target engagement and autonomous mission planning.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">✈ Fixed Wing</span>
+                            <span class="summon-stat">💣 Strategic AI</span>
+                            <span class="summon-stat">🤖 Auto-Mission</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <div class="summons-grid">
+                    <div class="summon-card">
+                        <div class="summon-name">LYNX UGV</div>
+                        <div class="summon-type">Mini-Tank • Ground Support</div>
+                        <div class="summon-desc">
+                            Unmanned ground vehicle: 4.9m × 2.05m × 1.85m, 2.3T. 400kW electric AWD, 150km/h max. Armed with 30mm cannon (500rds), 12.7mm HMG (5,000rds), 5.56mm minigun (10,000rds). Nano-ceramic armor resists 12.7mm API. 360° radar (5km), LiDAR, thermal imaging, autonomous SLAM navigation.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🚗 Fast Attack</span>
+                            <span class="summon-stat">🛡 Heavy Armor</span>
+                            <span class="summon-stat">🤖 AI Driven</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">V0rMehr Combat Drone</div>
+                        <div class="summon-type">Attack Helicopter • Air Superiority</div>
+                        <div class="summon-desc">
+                            Stealth combat helicopter: 6.2m long, 8.5m rotor, 1,800kg. Electric propulsion, 180km/h sprint, 4,000m+ ceiling. Armament: 7.62mm rotary minigun (10k rds), 12.7mm GAU-19 (5k rds), 16× 70mm rockets, 4× missiles (A2S/A2A). Falcon Eye multi-spectral camera, AESA radar (8km), 3D LiDAR. Ultra-stable hover precision ±0.05m.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🚁 Attack Helo</span>
+                            <span class="summon-stat">🎯 Multi-weapon</span>
+                            <span class="summon-stat">👁 Advanced Optics</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">MVS - Modular Vanguard</div>
+                        <div class="summon-type">Auto-Turret • Fixed Defense</div>
+                        <div class="summon-desc">
+                            Automated sentry system with 5.56mm AR and 40mm grenade launcher (HEI/smoke). AI-controlled 360° coverage with thermal/night vision. Perfect for perimeter defense and chokepoint control.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🤖 Automated</span>
+                            <span class="summon-stat">🔫 Dual Weapon</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">3AD Assault Drone</div>
+                        <div class="summon-type">Advanced Combat Drone • Air Support</div>
+                        <div class="summon-desc">
+                            Armed aerial drone platform with 5.8mm SMG. Provides mobile air support, reconnaissance, and precision targeting for ground forces.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">✈ Aerial</span>
+                            <span class="summon-stat">🎯 Combat</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">HVS - Heavy Vanguard</div>
+                        <div class="summon-type">Heavy Auto-Turret • Area Denial</div>
+                        <div class="summon-desc">
+                            Heavy automated weapons platform with 7.62mm AR, rocket launcher, missile launcher, and smoke GL. Designed for heavy suppression and vehicle elimination.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">💪 Heavy</span>
+                            <span class="summon-stat">🚀 Anti-Vehicle</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Recon Drone</div>
+                        <div class="summon-type">Surveillance • Intelligence</div>
+                        <div class="summon-desc">
+                            Area scanner drone for advanced reconnaissance. Provides real-time intelligence, thermal imaging, and tactical mapping for mission planning.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">👁 Surveillance</span>
+                            <span class="summon-stat">📡 Intel</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Dragonfly</div>
+                        <div class="summon-type">Nano-Drone • Micro Recon</div>
+                        <div class="summon-desc">
+                            Miniature surveillance drone capable of infiltrating tight spaces. Perfect for covert intelligence gathering and close-range target monitoring.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🔬 Micro</span>
+                            <span class="summon-stat">🕵 Stealth</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Swarm Drone Attack</div>
+                        <div class="summon-type">Drone Swarm • Overwhelming Force</div>
+                        <div class="summon-desc">
+                            Coordinated swarm of attack drones for area saturation and multi-target engagement. Overwhelms enemy defenses through sheer numbers.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">🐝 Swarm</span>
+                            <span class="summon-stat">💥 Mass Attack</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">Drone Healer</div>
+                        <div class="summon-type">Medical Support • Field Treatment</div>
+                        <div class="summon-desc">
+                            Automated medical support drone capable of delivering emergency medical supplies and basic field treatment to wounded units.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">❤ Medical</span>
+                            <span class="summon-stat">🚑 Support</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">RC Car Bomb</div>
+                        <div class="summon-type">Explosive • Tactical Demolition</div>
+                        <div class="summon-desc">
+                            Remote-controlled 1:12 scale vehicle loaded with C4. Perfect for precision demolition, vehicle elimination, and structure breaching.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">💣 Explosive</span>
+                            <span class="summon-stat">🎮 Remote</span>
+                        </div>
+                    </div>
+
+                    <div class="summon-card">
+                        <div class="summon-name">UAV Attack Aircraft</div>
+                        <div class="summon-type">Combat UAV • Strategic Strike</div>
+                        <div class="summon-desc">
+                            Long-range unmanned attack aircraft for strategic bombing runs and air superiority missions. High-altitude precision strike capability.
+                        </div>
+                        <div class="summon-stats">
+                            <span class="summon-stat">✈ Fixed Wing</span>
+                            <span class="summon-stat">💣 Strategic</span>
+                        </div>
+                    </div>
+        </div>
+
+        <!-- Footer Note -->
+        <div class="panel" style="margin-top: 2rem;">
+            <div class="panel-header">Warlord Protocol</div>
+            <p style="color: var(--text-muted); line-height: 1.6;">
+                The Technomancer's Warlord talent grants unprecedented military command authority. Through advanced summoning techniques, 
+                entire legion armies materialize with complete tactical loadouts, autonomous vehicles, and support infrastructure. 
+                Combined with Ronin-class Katana Mastery, this creates a unique hybrid warrior-commander capable of both personal 
+                combat excellence and large-scale battlefield domination.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Data Management
+        const defaultData = {
+            character: {
+                height: "163 cm",
+                weight: "67 kg",
+                appearance: "User Custom",
+                constitution: "Spiderman-Class",
+                skeleton: "Dragonium",
+                muscle: "Iron-Reinforced",
+                blood: "Calamity Poisonous"
+            },
+            classes: {
+                primary: {
+                    name: "Technomancer",
+                    rank: "1st",
+                    talent: "WARLORD",
+                    description: "Create and summon legion armies with full equipment, vehicles, and tactical support"
+                },
+                secondary: {
+                    name: "Ronin",
+                    rank: "2nd",
+                    talent: "Katana Mastery",
+                    description: "Supreme blade techniques and honor-bound combat expertise"
+                }
+            }
+        };
+
+        // Load data from localStorage or use defaults
+        let characterData = JSON.parse(localStorage.getItem('technomancerData')) || defaultData;
+
+        function saveData() {
+            localStorage.setItem('technomancerData', JSON.stringify(characterData));
+        }
+
+        function loadData() {
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            // Update Physical Profile
+            document.getElementById('height-value').textContent = characterData.character.height;
+            document.getElementById('weight-value').textContent = characterData.character.weight;
+            document.getElementById('appearance-value').textContent = characterData.character.appearance;
+
+            // Update Bio-Enhancement
+            document.getElementById('constitution-value').textContent = characterData.character.constitution;
+            document.getElementById('skeleton-value').textContent = characterData.character.skeleton;
+            document.getElementById('muscle-value').textContent = characterData.character.muscle;
+            document.getElementById('blood-value').textContent = characterData.character.blood;
+
+            // Update Primary Class
+            document.getElementById('primary-class-value').textContent = characterData.classes.primary.name;
+            document.getElementById('primary-rank-value').textContent = characterData.classes.primary.rank;
+            document.getElementById('primary-talent-value').textContent = characterData.classes.primary.talent;
+            document.getElementById('primary-desc-value').textContent = characterData.classes.primary.description;
+
+            // Update Secondary Class
+            document.getElementById('secondary-class-value').textContent = characterData.classes.secondary.name;
+            document.getElementById('secondary-rank-value').textContent = characterData.classes.secondary.rank;
+            document.getElementById('secondary-talent-value').textContent = characterData.classes.secondary.talent;
+            document.getElementById('secondary-desc-value').textContent = characterData.classes.secondary.description;
+        }
+
+        function editField(field, currentValue, section, key) {
+            const newValue = prompt(`Edit ${field}:`, currentValue);
+            if (newValue !== null && newValue.trim() !== '') {
+                if (section === 'character') {
+                    characterData.character[key] = newValue.trim();
+                } else if (section.startsWith('class-')) {
+                    const classType = section.split('-')[1]; // 'primary' or 'secondary'
+                    characterData.classes[classType][key] = newValue.trim();
+                }
+                saveData();
+                updateDisplay();
+            }
+        }
+
+        function resetToDefaults() {
+            if (confirm('Reset all data to defaults? This cannot be undone.')) {
+                characterData = JSON.parse(JSON.stringify(defaultData));
+                saveData();
+                updateDisplay();
+            }
+        }
+
+        function exportData() {
+            const dataStr = JSON.stringify(characterData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'technomancer-data.json';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const imported = JSON.parse(event.target.result);
+                        characterData = imported;
+                        saveData();
+                        updateDisplay();
+                        alert('Data imported successfully!');
+                    } catch (error) {
+                        alert('Error importing file. Please check the JSON format.');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        function switchTab(tabName) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            loadData();
+        });
+    </script>
+</body>
+</html>
